@@ -1,0 +1,33 @@
+{
+  "@renku_data_type": "renku.domain_model.project.Project",
+  "@renku_oid": "project",
+  "agent_version": "1.10.0",
+  "annotations": [],
+  "automated_update": true,
+  "creator": {
+    "@renku_data_type": "renku.domain_model.provenance.agent.Person",
+    "@renku_data_value": {
+      "affiliation": null,
+      "alternate_name": null,
+      "email": "damien.bouffard@eawag.ch",
+      "id": "mailto:damien.bouffard@eawag.ch",
+      "name": "Damien Bouffard"
+    }
+  },
+  "date_created": {
+    "@renku_data_type": "datetime.datetime",
+    "@renku_data_value": "2023-01-14T07:53:44+00:00"
+  },
+  "description": "",
+  "id": "/projects/damien.bouffard/run-simstrat",
+  "immutable_template_files": [],
+  "keywords": [],
+  "minimum_renku_version": "1.7.0",
+  "name": "Run_Simstrat",
+  "template_id": "python-minimal",
+  "template_metadata": "{\"__template_source__\": \"https://github.com/SwissDataScienceCenter/renku-project-template\", \"__template_ref__\": \"0.3.5\", \"__template_id__\": \"python-minimal\", \"__namespace__\": \"damien.bouffard\", \"__automated_update__\": true, \"__repository__\": \"https://renkulab.io/gitlab\", \"__sanitized_project_name__\": \"run-simstrat\", \"__project_slug__\": \"damien.bouffard/run-simstrat\", \"__project_description__\": \"\", \"__renku_version__\": \"1.10.0\", \"name\": \"Run_Simstrat\", \"__name__\": \"Run_Simstrat\", \"__template_version__\": \"b4a335b6c14662ebd510438bfa9967df6d530332\"}",
+  "template_ref": "0.3.5",
+  "template_source": "https://github.com/SwissDataScienceCenter/renku-project-template",
+  "template_version": "b4a335b6c14662ebd510438bfa9967df6d530332",
+  "version": 9
+}
