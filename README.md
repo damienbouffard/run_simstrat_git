@@ -20,7 +20,7 @@
 1. You can modify the forcing using the jupyter notebook provided `notebooks`.   
 a.  `Modify_Simstrat_Forcing.ipynb` will help you modify the meteorological forcing
 b.  `Modify_Simstrat_Inflow.ipynb` will help you modify the inflow forcing
-2. modify the par file with the new forcing conditions
+2. modify the `.par` file with the new forcing conditions (ypically `Forcing_modified.dat`)
 3. provide a new path and and new name for the model output
 4. copy `./run_testcase.sh` to the new path and edit the name of the par file in the .sh script
 5. Run the model
