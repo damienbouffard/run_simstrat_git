@@ -182,7 +182,7 @@ def load_inflow_data(path, file, start='file_start', stop='file_stop', load_unit
     depths = depths.astype('float')
     depths = np.split(depths, [deep_n])
 
-    # save deep and surface inflow order
+    # Save deep and surface inflow order
     deep_order = list(range(1,deep_n+1))
     surf_order = list(range(1,surf_n+1))
 
@@ -276,8 +276,9 @@ def save_forcing_data(data, path, file, copy=True):
     
     # Convert first column (datetime) to days since reference date
     # Assuming reference date is 1981-01-01 (common for Simstrat)
+    # Also assuming time values are initially given with 4 decimal place (common for Simstrat)
     datetime_values = data['Datetime']
-    time_values = (datetime_values - pd.Timestamp('1981-01-01')) / pd.Timedelta(days=1)
+    time_values = round((datetime_values - pd.Timestamp('1981-01-01')) / pd.Timedelta(days=1), 4)
     start = time_values.min()
     stop = time_values.max()
     
@@ -382,12 +383,13 @@ def save_inflow_data(deep, surf, deep_order, surf_order, path, file, copy=True):
     
     # Convert first column (datetime) to days since reference date
     # Assuming reference date is 1981-01-01 (common for Simstrat)
+    # Also assuming time values are initially given with 4 decimal place (common for Simstrat)
     datetime_values = deep['Datetime']
-    time_values = (datetime_values - pd.Timestamp('1981-01-01')) / pd.Timedelta(days=1)
+    time_values = round((datetime_values - pd.Timestamp('1981-01-01')) / pd.Timedelta(days=1), 4)
     start = time_values.min()
     stop = time_values.max()
     
-    # construct new data frame with deep and surface inflows, where:
+    # Construct new data frame with deep and surface inflows, where:
     # New inflows are zero where not defined in new inflow data
     # Existing inflows get original values where not defined in new inflow data
     data = pd.read_csv(local_file_path, sep=r'\s+', skiprows = 3, usecols =[0], names = ['Datetime']).astype('float')
@@ -441,6 +443,42 @@ def save_inflow_data(deep, surf, deep_order, surf_order, path, file, copy=True):
 
 # Modify data
 
+def check_negative(val_mod, val_save, var):
+    """
+    Function to check for negative values after modification.
+    
+    Parameters:
+    -----------
+    val_mod : pd.Series
+        Series with modified data
+    val_save : pd.Series
+        Series with original data
+    var: str
+        Variable name or inflow index
+    
+    Returns:
+    --------
+    val : pd.Series
+        Series:
+        - val_save if val_mod contains negative values
+        - val_mod else
+    """
+
+    if np.any(val_mod < 0):
+        if var.isdigit():
+            print(f"Negative values for inflow ({var}) — no modification")
+        else:
+            print(f"Negative values for forcing variable '{var}' — no modification")
+        val = val_save
+    else:
+        if var.isdigit():
+            print(f"✓ Inflow ({var}) modified")
+        else:
+            print(f"✓ Forcing variable '{var}' modified")
+        val = val_mod
+
+    return val
+
 def change_depth(data, col_index, depth):
     """
     Function to change depth of one inflow.
@@ -475,7 +513,7 @@ def change_depth(data, col_index, depth):
     
     return data_ed
 
-def add_inflow(data, data_order, col_index=-1, values=0, depth=0):
+def add_inflow(data, data_order, col_index=-1, values=0, depth=0, pos=False):
     """
     Function to add one inflow.
     
@@ -490,7 +528,10 @@ def add_inflow(data, data_order, col_index=-1, values=0, depth=0):
     values : int or 1D-array of length len(data), optional
         Inflow values (default: 0)
     depth : float, optional
-        Depth of added inflow (default: 0)      
+        Depth of added inflow (default: 0)
+    pos: bool, optional
+        Whether the inflow cannot be negative
+        (default: False -> negative values are ok)
     
     Returns:
     --------
@@ -509,7 +550,7 @@ def add_inflow(data, data_order, col_index=-1, values=0, depth=0):
         raise ValueError(f"col_index must be larger than 0, or -1")
     
     # Create the inflow if it is of correct format
-    if np.any(values < 0):
+    if pos and np.any(values < 0):
         raise ValueError(f"values cannot be negative or contain negative numbers")
     if np.ndim(values) == 0:
         inflow = np.full((len(data)), float(values)) 
